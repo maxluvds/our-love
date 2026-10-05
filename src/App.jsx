@@ -19,14 +19,14 @@ function App() {
   const [activeTab, setActiveTab] = useState('today');
   const [pairConfirmed, setPairConfirmed] = useState(false);
 
-  // Определяем участников пары
+  // Участники пары
   const members = couple?.members || [];
   const leftUserId = members[0] || null;
   const rightUserId = members[1] || null;
 
-  // Читаем имена обоих
-  const leftName = useProfile(leftUserId);
-  const rightName = useProfile(rightUserId);
+  // Профили обоих
+  const leftProfile = useProfile(leftUserId);
+  const rightProfile = useProfile(rightUserId);
 
   const isMeLeft = user?.uid === leftUserId;
 
@@ -34,17 +34,17 @@ function App() {
     setPairConfirmed(false);
   }, [user?.uid]);
 
-  // Пока Firebase проверяет сессию
   if (authLoading) {
     return (
       <div className="app">
         <Background />
-        <div className="app-loading"><div className="app-loading-spinner" /></div>
+        <div className="app-loading">
+          <div className="app-loading-spinner" />
+        </div>
       </div>
     );
   }
 
-  // Не вошёл
   if (!user) {
     return (
       <div className="app">
@@ -54,17 +54,17 @@ function App() {
     );
   }
 
-  // Загружаем пару
   if (coupleLoading) {
     return (
       <div className="app">
         <Background />
-        <div className="app-loading"><div className="app-loading-spinner" /></div>
+        <div className="app-loading">
+          <div className="app-loading-spinner" />
+        </div>
       </div>
     );
   }
 
-  // Пара ещё не подтверждена
   const shouldShowPairSetup = !coupleId || !pairConfirmed;
 
   if (shouldShowPairSetup && !localStorage.getItem(`pairConfirmed_${user.uid}`)) {
@@ -100,8 +100,8 @@ function App() {
             leftUserId={leftUserId}
             rightUserId={rightUserId}
             isMeLeft={isMeLeft}
-            leftName={leftName || 'Партнёр 1'}
-            rightName={rightName || 'Партнёр 2'}
+            leftName={leftProfile.name || 'Партнёр 1'}
+            rightName={rightProfile.name || 'Партнёр 2'}
           />
         );
       case 'plan':
@@ -109,19 +109,9 @@ function App() {
       case 'chat':
         return <ChatScreen />;
       case 'our':
-        return <OurScreen />;
+        return <OurScreen coupleId={coupleId} />;
       default:
-        return (
-          <TodayScreen
-            coupleId={coupleId}
-            currentUserId={user.uid}
-            leftUserId={leftUserId}
-            rightUserId={rightUserId}
-            isMeLeft={isMeLeft}
-            leftName={leftName || 'Партнёр 1'}
-            rightName={rightName || 'Партнёр 2'}
-          />
-        );
+        return null;
     }
   };
 
@@ -136,13 +126,19 @@ function App() {
           {activeTab === 'today' && (
             <p className="header-date">
               {new Date().toLocaleDateString('ru-RU', {
-                weekday: 'long', day: 'numeric', month: 'long',
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
               })}
             </p>
           )}
         </div>
 
-        <button className="settings-btn" onClick={signOut} title="Выйти">
+        <button
+          className="settings-btn"
+          onClick={signOut}
+          title="Выйти"
+        >
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
                stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />

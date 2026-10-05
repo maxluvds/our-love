@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import SectionCard from '../SectionCard/SectionCard';
+import WishlistScreen from '../Wishlist/WishlistScreen';
+import GoalsScreen from '../Goals/GoalsScreen';
 
-// SVG-иконки (линейные, тонкие)
 const ICONS = {
   notes: (
     <>
@@ -72,9 +73,30 @@ const SECTIONS = [
   },
 ];
 
-function OurScreen() {
+function OurScreen({ coupleId }) {
   const [openSection, setOpenSection] = useState(null);
 
+  // Вишлист
+  if (openSection === 'wishlist') {
+    return (
+      <WishlistScreen
+        coupleId={coupleId}
+        onBack={() => setOpenSection(null)}
+      />
+    );
+  }
+
+  // Цели
+  if (openSection === 'goals') {
+    return (
+      <GoalsScreen
+        coupleId={coupleId}
+        onBack={() => setOpenSection(null)}
+      />
+    );
+  }
+
+  // Остальные — заглушки
   if (openSection) {
     const section = SECTIONS.find((s) => s.id === openSection);
     return (
