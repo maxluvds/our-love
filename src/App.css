@@ -1,0 +1,217 @@
+/* --- Глобальные настройки --- */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #F9F5F0;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* --- Структура приложения --- */
+.app {
+  max-width: 500px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding-bottom: 120px;
+  /* НЕ используем position: relative и overflow: hidden */
+}
+
+/* --- Шапка --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 32px 24px 20px;
+  gap: 16px;
+  position: relative;
+  z-index: 2; /* Контент над пятнами */
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.header-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: #2c2c2c;
+  letter-spacing: -0.5px;
+}
+
+.header-date {
+  font-size: 14px;
+  color: #999;
+  margin: 4px 0 0 0;
+  text-transform: capitalize;
+  font-weight: 400;
+}
+
+.settings-btn {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.settings-btn:hover {
+  transform: rotate(45deg) scale(1.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Основной контент --- */
+.main-content {
+  padding: 0 24px;
+  position: relative;
+  z-index: 2; /* Контент над пятнами */
+}
+
+.main-content > * {
+  animation: screenFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes screenFade {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Карточки (эффект стекла) --- */
+.card {
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.counter-card {
+  padding: 40px 24px;
+}
+
+/* --- Сердечко --- */
+.heart {
+  font-size: 40px;
+  margin-bottom: 16px;
+  display: inline-block;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* --- Имена и счётчик --- */
+.names {
+  font-size: 18px;
+  color: #666;
+  font-weight: 500;
+  margin: 0 0 24px 0;
+  letter-spacing: -0.2px;
+}
+
+.counter {
+  font-size: 96px;
+  font-weight: 700;
+  color: #C05A5A;
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -4px;
+  animation: fadeIn 1.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #999;
+  margin: 0;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.start-date {
+  font-size: 14px;
+  color: #aaa;
+  margin-top: 20px;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* --- Заглушки --- */
+.placeholder-card {
+  padding: 60px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.placeholder-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.placeholder-title {
+  font-size: 24px;
+  color: #333;
+  margin: 0 0 12px 0;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.placeholder-text {
+  font-size: 15px;
+  color: #999;
+  margin: 0;
+  line-height: 1.6;
+  text-align: center;
+  max-width: 280px;
+}

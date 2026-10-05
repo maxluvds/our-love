@@ -1,0 +1,125 @@
+.mood-card {
+  margin-top: 16px;
+  padding: 24px 20px;
+}
+
+.mood-title {
+  font-size: 15px;
+  color: #999;
+  font-weight: 500;
+  margin: 0 0 20px 0;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.mood-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 8px;
+}
+
+.mood-person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.mood-emoji-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 12px;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+.mood-emoji-btn:hover {
+  transform: scale(1.15);
+}
+
+.mood-emoji-btn:active {
+  transform: scale(0.95);
+}
+
+.mood-emoji {
+  font-size: 52px;
+  line-height: 1;
+  display: block;
+}
+
+.mood-name {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.mood-label {
+  font-size: 12px;
+  color: #aaa;
+  margin: 0;
+}
+
+/* Разделитель без пульсации (для производительности) */
+.mood-divider {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* Меню выбора */
+.mood-picker {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: rgba(253, 246, 240, 0.7);
+  border-radius: 16px;
+  animation: pickerIn 0.3s ease-out;
+}
+
+@keyframes pickerIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.picker-hint {
+  font-size: 13px;
+  color: #999;
+  margin: 0 0 12px 0;
+  text-align: center;
+}
+
+.picker-options {
+  display: flex;
+  justify-content: space-around;
+  gap: 8px;
+}
+
+.picker-btn {
+  background: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.picker-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.picker-btn:active {
+  transform: scale(0.9);
+}
+
+.picker-emoji {
+  font-size: 24px;
+  line-height: 1;
+}

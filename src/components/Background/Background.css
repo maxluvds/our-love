@@ -1,0 +1,80 @@
+.bg-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Обёртка: размытие + GPU-ускорение */
+.bg-blob-wrapper {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.85;
+  will-change: transform;
+  transform: translateZ(0);       /* GPU-ускорение */
+  backface-visibility: hidden;     /* Тоже для GPU */
+}
+
+/* Внутренний блок: цвет */
+.bg-blob-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* --- Пятна --- */
+.bg-blob-1 {
+  width: 500px;
+  height: 500px;
+  top: -200px;
+  left: -150px;
+  animation: float1 20s ease-in-out infinite;
+}
+.bg-blob-1 .bg-blob-inner {
+  background: #F8D5C8;
+}
+
+.bg-blob-2 {
+  width: 600px;
+  height: 600px;
+  bottom: -250px;
+  right: -200px;
+  animation: float2 25s ease-in-out infinite;
+}
+.bg-blob-2 .bg-blob-inner {
+  background: #D4E0D2;
+}
+
+.bg-blob-3 {
+  width: 400px;
+  height: 400px;
+  top: 40%;
+  left: 40%;
+  animation: float3 30s ease-in-out infinite;
+}
+.bg-blob-3 .bg-blob-inner {
+  background: #F5E6D3;
+}
+
+/* --- Анимации (используем translate3d вместо translate) --- */
+@keyframes float1 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(60px, 40px, 0) scale(1.1); }
+  66%      { transform: translate3d(-30px, 60px, 0) scale(0.95); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-80px, -50px, 0) scale(1.15); }
+}
+
+@keyframes float3 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(-50px, 30px, 0) scale(1.1); }
+  66%      { transform: translate3d(40px, -40px, 0) scale(0.9); }
+}

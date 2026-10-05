@@ -1,0 +1,51 @@
+.bottom-nav {
+  position: fixed;
+  bottom: 16px; /* Отступ от низа экрана */
+  left: 50%;    /* Ставим по центру */
+  transform: translateX(-50%); /* Точное центрирование */
+  width: calc(100% - 32px); /* Ширина с отступами по бокам */
+  max-width: 460px; /* Максимальная ширина, чтобы не растягивалась */
+  
+  display: flex;
+  justify-content: space-between; /* Распределяем место */
+  align-items: center;
+  
+  background-color: #FFFFFF;
+  padding: 10px 12px;
+  border-radius: 28px; /* Более круглые углы, как на скрине */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* Мягкая тень */
+  z-index: 100;
+}
+
+.nav-item {
+  flex: 1; /* Каждая кнопка занимает равную часть */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 0;
+  color: #999;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  border-radius: 16px;
+}
+
+.nav-item.active {
+  color: #C05A5A;
+  background-color: #FDF6F0; /* Легкий фон для активной кнопки */
+}
+
+.nav-icon {
+  font-size: 22px;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+
+.nav-label {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+}
