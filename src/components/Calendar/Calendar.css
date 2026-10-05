@@ -1,8 +1,10 @@
+/* === Карточка календаря === */
 .calendar-card {
   padding: 22px 20px 18px;
   margin-top: 16px;
 }
 
+/* === Шапка (месяц + стрелки) === */
 .calendar-header {
   display: flex;
   align-items: center;
@@ -51,6 +53,7 @@
   transform: scale(0.94);
 }
 
+/* === Дни недели === */
 .cal-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -66,6 +69,7 @@
   padding: 6px 0;
 }
 
+/* === Сетка чисел === */
 .cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -73,6 +77,7 @@
 }
 
 .cal-cell {
+  position: relative;
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
@@ -81,19 +86,22 @@
   font-size: 13px;
   font-weight: 500;
   color: #555;
+  cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
+  user-select: none;
 }
 
 .cal-cell.empty {
   visibility: hidden;
+  cursor: default;
 }
 
 .cal-cell:hover:not(.empty) {
   background: rgba(255, 255, 255, 0.7);
   transform: scale(1.05);
-  cursor: pointer;
 }
 
+/* Сегодня */
 .cal-cell.today {
   background: linear-gradient(135deg, #C05A5A, #a83e3e);
   color: #fff;
@@ -101,8 +109,8 @@
   box-shadow: 0 6px 14px rgba(192, 90, 90, 0.35);
 }
 
+/* Особый день (годовщина) */
 .cal-cell.special {
-  position: relative;
   color: #C05A5A;
   font-weight: 700;
 }
@@ -125,13 +133,31 @@
   background: #fff;
 }
 
+/* Выбранный день */
+.cal-cell.selected {
+  outline: 2px solid #C05A5A;
+  outline-offset: -2px;
+}
+
+/* День с событием */
+.cal-cell.has-events .event-dot {
+  position: absolute;
+  bottom: 4px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #6C8E4E;
+}
+
+/* === Легенда === */
 .cal-legend {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 16px;
   margin-top: 16px;
   font-size: 11px;
   color: #999;
+  flex-wrap: wrap;
 }
 
 .cal-legend span {
@@ -147,11 +173,156 @@
   display: inline-block;
 }
 
-.dot-today {
-  background: #C05A5A;
+.dot-today { background: #C05A5A; }
+.dot-special { background: #C05A5A; opacity: 0.55; }
+.dot-event { background: #6C8E4E; }
+
+/* === Панель выбранного дня === */
+.day-panel {
+  margin-top: 18px;
+  padding: 16px;
+  background: rgba(253, 246, 240, 0.85);
+  border-radius: 16px;
+  animation: dayPanelIn 0.3s ease-out;
 }
 
-.dot-special {
-  background: #C05A5A;
-  opacity: 0.55;
+@keyframes dayPanelIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.day-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 12px;
+  text-transform: capitalize;
+}
+
+.day-panel-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #999;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.day-panel-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+/* === Список событий === */
+.event-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+}
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #fff;
+  border-radius: 12px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #444;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  animation: eventIn 0.25s ease-out;
+}
+
+@keyframes eventIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.event-text {
+  flex: 1;
+  word-break: break-word;
+}
+
+.event-delete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #ccc;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.event-delete:hover {
+  background: #ffebeb;
+  color: #C05A5A;
+}
+
+.event-empty {
+  font-size: 12px;
+  color: #aaa;
+  text-align: center;
+  margin: 8px 0 12px;
+  font-style: italic;
+}
+
+/* === Форма добавления === */
+.event-form {
+  display: flex;
+  gap: 8px;
+}
+
+.event-input {
+  flex: 1;
+  border: 1px solid rgba(192, 90, 90, 0.25);
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #333;
+  outline: none;
+  font-family: inherit;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-input:focus {
+  border-color: #C05A5A;
+  box-shadow: 0 0 0 3px rgba(192, 90, 90, 0.1);
+}
+
+.event-input::placeholder {
+  color: #bbb;
+}
+
+.event-add-btn {
+  background: linear-gradient(135deg, #C05A5A, #a83e3e);
+  border: none;
+  color: #fff;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(192, 90, 90, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(192, 90, 90, 0.4);
+}
+
+.event-add-btn:active {
+  transform: scale(0.94);
 }
