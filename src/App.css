@@ -1,4 +1,4 @@
-/* --- Глобальные настройки --- */
+/* === Глобальные настройки === */
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -17,16 +17,15 @@ button {
   font-family: inherit;
 }
 
-/* --- Структура приложения --- */
+/* === Структура приложения === */
 .app {
   max-width: 500px;
   margin: 0 auto;
   min-height: 100vh;
   padding-bottom: 120px;
-  /* НЕ используем position: relative и overflow: hidden */
 }
 
-/* --- Шапка --- */
+/* === Шапка === */
 .header {
   display: flex;
   justify-content: space-between;
@@ -34,13 +33,13 @@ button {
   padding: 32px 24px 20px;
   gap: 16px;
   position: relative;
-  z-index: 2; /* Контент над пятнами */
+  z-index: 2;
   animation: slideDown 0.5s ease-out;
 }
 
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .header-title {
@@ -61,9 +60,7 @@ button {
 
 .settings-btn {
   background-color: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -82,11 +79,11 @@ button {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* --- Основной контент --- */
+/* === Основной контент === */
 .main-content {
   padding: 0 24px;
   position: relative;
-  z-index: 2; /* Контент над пятнами */
+  z-index: 2;
 }
 
 .main-content > * {
@@ -95,15 +92,13 @@ button {
 
 @keyframes screenFade {
   from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* --- Карточки (эффект стекла) --- */
+/* === Карточки === */
 .card {
-  background-color: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: 24px;
   padding: 32px 24px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
@@ -119,27 +114,27 @@ button {
 
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .counter-card {
   padding: 40px 24px;
 }
 
-/* --- Сердечко --- */
+/* === Сердечко === */
 .heart {
   font-size: 40px;
   margin-bottom: 16px;
   display: inline-block;
-  animation: pulse 2s ease-in-out infinite;
+  animation: pulse 3s ease-in-out infinite;
 }
 
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  50%      { transform: scale(1.12); }
 }
 
-/* --- Имена и счётчик --- */
+/* === Имена и счётчик === */
 .names {
   font-size: 18px;
   color: #666;
@@ -160,7 +155,7 @@ button {
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .subtitle {
@@ -180,7 +175,7 @@ button {
   font-weight: 400;
 }
 
-/* --- Заглушки --- */
+/* === Заглушки для экранов === */
 .placeholder-card {
   padding: 60px 24px;
   display: flex;
@@ -196,7 +191,7 @@ button {
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  50%      { transform: translateY(-8px); }
 }
 
 .placeholder-title {
@@ -214,4 +209,46 @@ button {
   line-height: 1.6;
   text-align: center;
   max-width: 280px;
+}
+
+/* === Раздел "Наше" === */
+
+/* Кнопка "Назад" */
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  margin-bottom: 28px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #fff;
+  transform: translateX(-3px);
+}
+
+/* Большая иконка в открытом разделе */
+.section-icon-large {
+  width: 84px;
+  height: 84px;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  animation: fadeInIcon 0.5s ease-out;
+}
+
+@keyframes fadeInIcon {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
 }
