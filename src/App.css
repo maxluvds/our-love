@@ -252,3 +252,32 @@ button {
   from { opacity: 0; transform: scale(0.85); }
   to   { opacity: 1; transform: scale(1); }
 }
+
+/* === Загрузка при старте === */
+.app-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(192, 90, 90, 0.2);
+  border-top-color: #C05A5A;
+  border-radius: 50%;
+  animation: spinApp 0.8s linear infinite;
+}
+
+@keyframes spinApp {
+  to { transform: rotate(360deg); }
+}
+
+/* === Действия в шапке === */
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
