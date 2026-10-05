@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import useAuth from './hooks/useAuth';
 import useCouple from './hooks/useCouple';
+import useProfile from './hooks/useProfile';
 import AuthScreen from './components/AuthScreen/AuthScreen';
 import PairSetup from './components/PairSetup/PairSetup';
 import Background from './components/Background/Background';
@@ -18,24 +19,32 @@ function App() {
   const [activeTab, setActiveTab] = useState('today');
   const [pairConfirmed, setPairConfirmed] = useState(false);
 
-  // Если пользователь сменился — сбрасываем флаг
+  // Определяем участников пары
+  const members = couple?.members || [];
+  const leftUserId = members[0] || null;
+  const rightUserId = members[1] || null;
+
+  // Читаем имена обоих
+  const leftName = useProfile(leftUserId);
+  const rightName = useProfile(rightUserId);
+
+  const isMeLeft = user?.uid === leftUserId;
+
   useEffect(() => {
     setPairConfirmed(false);
   }, [user?.uid]);
 
-  // === 1. Пока Firebase проверяет сессию ===
+  // Пока Firebase проверяет сессию
   if (authLoading) {
     return (
       <div className="app">
         <Background />
-        <div className="app-loading">
-          <div className="app-loading-spinner" />
-        </div>
+        <div className="app-loading"><div className="app-loading-spinner" /></div>
       </div>
     );
   }
 
-  // === 2. Не вошёл — экран входа ===
+  // Не вошёл
   if (!user) {
     return (
       <div className="app">
@@ -45,19 +54,17 @@ function App() {
     );
   }
 
-  // === 3. Загружаем информацию о паре ===
+  // Загружаем пару
   if (coupleLoading) {
     return (
       <div className="app">
         <Background />
-        <div className="app-loading">
-          <div className="app-loading-spinner" />
-        </div>
+        <div className="app-loading"><div className="app-loading-spinner" /></div>
       </div>
     );
   }
 
-  // === 4. Пара ещё не подтверждена в этой сессии ===
+  // Пара ещё не подтверждена
   const shouldShowPairSetup = !coupleId || !pairConfirmed;
 
   if (shouldShowPairSetup && !localStorage.getItem(`pairConfirmed_${user.uid}`)) {
@@ -76,19 +83,6 @@ function App() {
     );
   }
 
-  // === 5. Определяем фиксированные позиции для настроения ===
-  // members[0] — всегда слева, members[1] — всегда справа.
-  const members = couple?.members || [];
-  const leftUserId = members[0] || null;
-  const rightUserId = members[1] || null;
-  const isMeLeft = user.uid === leftUserId;
-
-  // Имена для левой и правой позиции.
-  // Если ты вошёл первым — ты слева. Иначе — справа.
-  // Можно поменять на реальные имена.
-  const leftName = 'Максим';
-  const rightName = 'Дарья';
-
   const headers = {
     today: 'Сегодня у нас',
     plan: 'Наши планы',
@@ -106,8 +100,8 @@ function App() {
             leftUserId={leftUserId}
             rightUserId={rightUserId}
             isMeLeft={isMeLeft}
-            leftName={leftName}
-            rightName={rightName}
+            leftName={leftName || 'Партнёр 1'}
+            rightName={rightName || 'Партнёр 2'}
           />
         );
       case 'plan':
@@ -124,8 +118,8 @@ function App() {
             leftUserId={leftUserId}
             rightUserId={rightUserId}
             isMeLeft={isMeLeft}
-            leftName={leftName}
-            rightName={rightName}
+            leftName={leftName || 'Партнёр 1'}
+            rightName={rightName || 'Партнёр 2'}
           />
         );
     }
@@ -142,25 +136,15 @@ function App() {
           {activeTab === 'today' && (
             <p className="header-date">
               {new Date().toLocaleDateString('ru-RU', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
+                weekday: 'long', day: 'numeric', month: 'long',
               })}
             </p>
           )}
         </div>
 
         <button className="settings-btn" onClick={signOut} title="Выйти">
-          <svg
-            viewBox="0 0 24 24"
-            width="18"
-            height="18"
-            fill="none"
-            stroke="#666"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+               stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
             <path d="M16 17l5-5-5-5" />
             <path d="M21 12H9" />

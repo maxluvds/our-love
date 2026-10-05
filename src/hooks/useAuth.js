@@ -1,40 +1,42 @@
-// src/hooks/useAuth.js
-
 import { useState, useEffect } from 'react';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
   onAuthStateChanged,
+  updateProfile,
 } from 'firebase/auth';
-import { auth } from '../firebase/config';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase/config';
 
 function useAuth() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Firebase сам сообщает, вошёл пользователь или нет
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
-  // Регистрация
-  const signUp = async (email, password) => {
+  const signUp = async (email, password, name) => {
     const result = await createUserWithEmailAndPassword(auth, email, password);
-    return result.user;
+    const newUser = result.user;
+
+    // Сохраняем имя в Auth-профиле и в Firestore
+    await updateProfile(newUser, { displayName: name });
+    await setDoc(doc(db, 'users', newUser.uid), { name }, { merge: true });
+
+    return newUser;
   };
 
-  // Вход
   const signIn = async (email, password) => {
     const result = await signInWithEmailAndPassword(auth, email, password);
     return result.user;
   };
 
-  // Выход
   const signOut = async () => {
     await firebaseSignOut(auth);
   };

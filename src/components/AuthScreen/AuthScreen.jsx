@@ -3,6 +3,7 @@ import './AuthScreen.css';
 
 function AuthScreen({ signIn, signUp }) {
   const [mode, setMode] = useState('login');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -15,6 +16,10 @@ function AuthScreen({ signIn, signUp }) {
     e.preventDefault();
     setError('');
 
+    if (!isLogin && !name.trim()) {
+      setError('Введите имя');
+      return;
+    }
     if (!email.trim() || !password.trim()) {
       setError('Заполните все поля');
       return;
@@ -29,11 +34,9 @@ function AuthScreen({ signIn, signUp }) {
       if (isLogin) {
         await signIn(email.trim(), password);
       } else {
-        await signUp(email.trim(), password);
+        await signUp(email.trim(), password, name.trim());
       }
-      // Ничего не делаем дальше — App.jsx сам увидит смену user
     } catch (err) {
-      // Переводим ошибки Firebase на русский
       const code = err.code || '';
       let message = 'Что-то пошло не так. Попробуйте ещё раз.';
 
@@ -54,6 +57,7 @@ function AuthScreen({ signIn, signUp }) {
   const toggleMode = () => {
     setMode(isLogin ? 'signup' : 'login');
     setError('');
+    setName('');
   };
 
   return (
@@ -71,6 +75,22 @@ function AuthScreen({ signIn, signUp }) {
         </p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
+          {/* Поле "Имя" — только при регистрации */}
+          {!isLogin && (
+            <div className="auth-field">
+              <input
+                id="name"
+                type="text"
+                className="auth-input"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder=" "
+                autoComplete="name"
+              />
+              <label htmlFor="name" className="auth-label">Ваше имя</label>
+            </div>
+          )}
+
           <div className="auth-field">
             <input
               id="email"
@@ -121,11 +141,7 @@ function AuthScreen({ signIn, signUp }) {
           {error && <div className="auth-error">{error}</div>}
 
           <button type="submit" className="auth-submit" disabled={loading}>
-            {loading ? (
-              <span className="auth-spinner" />
-            ) : (
-              isLogin ? 'Войти' : 'Создать аккаунт'
-            )}
+            {loading ? <span className="auth-spinner" /> : isLogin ? 'Войти' : 'Создать аккаунт'}
           </button>
         </form>
 
