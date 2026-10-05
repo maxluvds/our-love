@@ -13,13 +13,13 @@ const SPECIAL_DATES = [
   { month: 8, day: 17, label: 'Начало отношений' },
 ];
 
-function Calendar() {
+function Calendar({ coupleId }) {
   const today = new Date();
   const [viewDate, setViewDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   const [selectedDay, setSelectedDay] = useState(null);
   const [newEventText, setNewEventText] = useState('');
 
-  const { addEvent, removeEvent, getEvents, hasEvents } = useEvents();
+  const { addEvent, removeEvent, getEvents, hasEvents } = useEvents(coupleId);
 
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
@@ -136,7 +136,7 @@ function Calendar() {
                   <span className="event-text">{ev.text}</span>
                   <button
                     className="event-delete"
-                    onClick={() => removeEvent(year, month, selectedDay, ev.id)}
+                    onClick={() => removeEvent(ev.id)}
                     aria-label="Удалить"
                   >
                     ✕

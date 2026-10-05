@@ -50,6 +50,13 @@
   display: block;
 }
 
+.mood-emoji-static {
+  font-size: 52px;
+  line-height: 1;
+  display: block;
+  margin-bottom: 12px;
+}
+
 .mood-name {
   font-size: 14px;
   color: #666;

@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useAuth from './hooks/useAuth';
+import useCouple from './hooks/useCouple';
 import AuthScreen from './components/AuthScreen/AuthScreen';
+import PairSetup from './components/PairSetup/PairSetup';
 import Background from './components/Background/Background';
 import Flower from './components/Flower/Flower';
 import BottomNav from './components/BottomNav/BottomNav';
@@ -11,11 +13,18 @@ import OurScreen from './components/screens/OurScreen';
 import './App.css';
 
 function App() {
-  const { user, loading, signIn, signUp, signOut } = useAuth();
+  const { user, loading: authLoading, signIn, signUp, signOut } = useAuth();
+  const { coupleId, couple, loading: coupleLoading, createCouple, joinCouple } = useCouple(user);
   const [activeTab, setActiveTab] = useState('today');
+  const [pairConfirmed, setPairConfirmed] = useState(false);
 
-  // Пока Firebase проверяет сессию — показываем заглушку
-  if (loading) {
+  // Если пользователь сменился — сбрасываем флаг
+  useEffect(() => {
+    setPairConfirmed(false);
+  }, [user?.uid]);
+
+  // === 1. Пока Firebase проверяет сессию ===
+  if (authLoading) {
     return (
       <div className="app">
         <Background />
@@ -26,7 +35,7 @@ function App() {
     );
   }
 
-  // Не вошёл — показываем экран входа
+  // === 2. Не вошёл — экран входа ===
   if (!user) {
     return (
       <div className="app">
@@ -36,7 +45,50 @@ function App() {
     );
   }
 
-  // Вошёл — показываем приложение
+  // === 3. Загружаем информацию о паре ===
+  if (coupleLoading) {
+    return (
+      <div className="app">
+        <Background />
+        <div className="app-loading">
+          <div className="app-loading-spinner" />
+        </div>
+      </div>
+    );
+  }
+
+  // === 4. Пара ещё не подтверждена в этой сессии ===
+  const shouldShowPairSetup = !coupleId || !pairConfirmed;
+
+  if (shouldShowPairSetup && !localStorage.getItem(`pairConfirmed_${user.uid}`)) {
+    return (
+      <div className="app">
+        <Background />
+        <PairSetup
+          createCouple={createCouple}
+          joinCouple={joinCouple}
+          onComplete={() => {
+            localStorage.setItem(`pairConfirmed_${user.uid}`, '1');
+            setPairConfirmed(true);
+          }}
+        />
+      </div>
+    );
+  }
+
+  // === 5. Определяем фиксированные позиции для настроения ===
+  // members[0] — всегда слева, members[1] — всегда справа.
+  const members = couple?.members || [];
+  const leftUserId = members[0] || null;
+  const rightUserId = members[1] || null;
+  const isMeLeft = user.uid === leftUserId;
+
+  // Имена для левой и правой позиции.
+  // Если ты вошёл первым — ты слева. Иначе — справа.
+  // Можно поменять на реальные имена.
+  const leftName = 'Максим';
+  const rightName = 'Дарья';
+
   const headers = {
     today: 'Сегодня у нас',
     plan: 'Наши планы',
@@ -46,11 +98,36 @@ function App() {
 
   const renderScreen = () => {
     switch (activeTab) {
-      case 'today': return <TodayScreen />;
-      case 'plan':  return <PlanScreen />;
-      case 'chat':  return <ChatScreen />;
-      case 'our':   return <OurScreen />;
-      default:      return <TodayScreen />;
+      case 'today':
+        return (
+          <TodayScreen
+            coupleId={coupleId}
+            currentUserId={user.uid}
+            leftUserId={leftUserId}
+            rightUserId={rightUserId}
+            isMeLeft={isMeLeft}
+            leftName={leftName}
+            rightName={rightName}
+          />
+        );
+      case 'plan':
+        return <PlanScreen coupleId={coupleId} />;
+      case 'chat':
+        return <ChatScreen />;
+      case 'our':
+        return <OurScreen />;
+      default:
+        return (
+          <TodayScreen
+            coupleId={coupleId}
+            currentUserId={user.uid}
+            leftUserId={leftUserId}
+            rightUserId={rightUserId}
+            isMeLeft={isMeLeft}
+            leftName={leftName}
+            rightName={rightName}
+          />
+        );
     }
   };
 
@@ -73,16 +150,22 @@ function App() {
           )}
         </div>
 
-        <div className="header-actions">
-          <button className="settings-btn" onClick={signOut} title="Выйти">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-                 stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-              <path d="M16 17l5-5-5-5" />
-              <path d="M21 12H9" />
-            </svg>
-          </button>
-        </div>
+        <button className="settings-btn" onClick={signOut} title="Выйти">
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="#666"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <path d="M16 17l5-5-5-5" />
+            <path d="M21 12H9" />
+          </svg>
+        </button>
       </header>
 
       <main className="main-content" key={activeTab}>

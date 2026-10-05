@@ -1,6 +1,6 @@
 import MoodCard from '../MoodCard/MoodCard';
 
-function TodayScreen() {
+function TodayScreen({ coupleId, currentUserId, leftUserId, rightUserId, isMeLeft }) {
   const startDate = new Date(2024, 8, 17);
   const yourName = "Максим";
   const partnerName = "Дарья";
@@ -27,7 +27,15 @@ function TodayScreen() {
         <p className="start-date">с {formatDate(startDate)}</p>
       </div>
 
-      <MoodCard />
+      <MoodCard
+        coupleId={coupleId}
+        currentUserId={currentUserId}
+        leftUserId={leftUserId}
+        rightUserId={rightUserId}
+        isMeLeft={isMeLeft}
+        leftName={yourName}
+        rightName={partnerName}
+      />
     </>
   );
 }

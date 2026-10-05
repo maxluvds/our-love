@@ -1,9 +1,9 @@
 import Calendar from '../Calendar/Calendar';
 
-function PlanScreen() {
+function PlanScreen({ coupleId }) {
   return (
     <>
-      <Calendar />
+      <Calendar coupleId={coupleId} />
 
       <div className="card placeholder-card" style={{ marginTop: '16px' }}>
         <div className="placeholder-icon">📌</div>

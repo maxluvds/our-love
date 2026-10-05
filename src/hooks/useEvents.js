@@ -1,48 +1,79 @@
+// src/hooks/useEvents.js
+
 import { useState, useEffect } from 'react';
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+  serverTimestamp,
+} from 'firebase/firestore';
+import { db } from '../firebase/config';
 
-function useEvents() {
-  const [events, setEvents] = useState(() => {
-    const saved = localStorage.getItem('ourEvents');
-    return saved ? JSON.parse(saved) : {};
-  });
+function useEvents(coupleId) {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  // Подписываемся на события пары в реальном времени
   useEffect(() => {
-    localStorage.setItem('ourEvents', JSON.stringify(events));
-  }, [events]);
+    if (!coupleId) {
+      setEvents([]);
+      setLoading(false);
+      return;
+    }
 
-  const makeKey = (year, month, day) => {
-    const m = String(month + 1).padStart(2, '0');
-    const d = String(day).padStart(2, '0');
-    return `${year}-${m}-${d}`;
+    const eventsRef = collection(db, 'couples', coupleId, 'events');
+    const q = query(eventsRef, orderBy('createdAt', 'asc'));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const list = snapshot.docs.map((docSnap) => ({
+        id: docSnap.id,
+        ...docSnap.data(),
+      }));
+      setEvents(list);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [coupleId]);
+
+  // Добавить событие на конкретный день
+  const addEvent = async (year, month, day, text) => {
+    if (!coupleId) return;
+    const eventsRef = collection(db, 'couples', coupleId, 'events');
+    await addDoc(eventsRef, {
+      year,
+      month,
+      day,
+      text,
+      createdAt: serverTimestamp(),
+    });
   };
 
-  const addEvent = (year, month, day, text) => {
-    const key = makeKey(year, month, day);
-    setEvents((prev) => ({
-      ...prev,
-      [key]: [...(prev[key] || []), { id: Date.now(), text }],
-    }));
+  // Удалить событие
+  const removeEvent = async (id) => {
+    if (!coupleId) return;
+    await deleteDoc(doc(db, 'couples', coupleId, 'events', id));
   };
 
-  const removeEvent = (year, month, day, id) => {
-    const key = makeKey(year, month, day);
-    setEvents((prev) => ({
-      ...prev,
-      [key]: (prev[key] || []).filter((e) => e.id !== id),
-    }));
-  };
-
+  // Получить события на конкретный день
   const getEvents = (year, month, day) => {
-    const key = makeKey(year, month, day);
-    return events[key] || [];
+    return events.filter(
+      (e) => e.year === year && e.month === month && e.day === day
+    );
   };
 
+  // Проверить, есть ли события на день
   const hasEvents = (year, month, day) => {
-    const key = makeKey(year, month, day);
-    return (events[key] || []).length > 0;
+    return events.some(
+      (e) => e.year === year && e.month === month && e.day === day
+    );
   };
 
-  return { addEvent, removeEvent, getEvents, hasEvents };
+  return { addEvent, removeEvent, getEvents, hasEvents, loading };
 }
 
 export default useEvents;

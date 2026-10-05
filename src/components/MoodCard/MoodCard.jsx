@@ -1,94 +1,90 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import useMood from '../../hooks/useMood';
 import './MoodCard.css';
 
-// Список доступных настроений
 const MOODS = [
-  { id: 'happy',   emoji: '😊', label: 'Хорошо' },
-  { id: 'love',    emoji: '😍', label: 'Влюблён' },
-  { id: 'tired',   emoji: '😴', label: 'Устал' },
-  { id: 'sad',     emoji: '😢', label: 'Грустно' },
-  { id: 'angry',   emoji: '😡', label: 'Злюсь' },
+  { id: 'happy', emoji: '😊', label: 'Хорошо' },
+  { id: 'love',  emoji: '😍', label: 'Влюблён' },
+  { id: 'tired', emoji: '😴', label: 'Устал' },
+  { id: 'sad',   emoji: '😢', label: 'Грустно' },
+  { id: 'angry', emoji: '😡', label: 'Злюсь' },
 ];
 
-function MoodCard() {
-  // Состояния: выбранное настроение для каждого
-  const [myMood, setMyMood] = useState('happy');
-  const [partnerMood, setPartnerMood] = useState('happy');
+function MoodCard({
+  coupleId,
+  currentUserId,
+  leftUserId,
+  rightUserId,
+  isMeLeft,
+  leftName,
+  rightName,
+}) {
+  const { moods, updateMyMood } = useMood(coupleId);
+  const [openPicker, setOpenPicker] = useState(false);
 
-  // Какое меню сейчас открыто: 'me', 'partner' или null
-  const [openPicker, setOpenPicker] = useState(null);
-
-  // Загружаем сохранённые настроения при первом рендере
-  useEffect(() => {
-    const savedMyMood = localStorage.getItem('myMood');
-    const savedPartnerMood = localStorage.getItem('partnerMood');
-    if (savedMyMood) setMyMood(savedMyMood);
-    if (savedPartnerMood) setPartnerMood(savedPartnerMood);
-  }, []);
-
-  // Обработчик выбора настроения
-  const handleSelect = (who, moodId) => {
-    if (who === 'me') {
-      setMyMood(moodId);
-      localStorage.setItem('myMood', moodId);
-    } else {
-      setPartnerMood(moodId);
-      localStorage.setItem('partnerMood', moodId);
-    }
-    setOpenPicker(null); // Закрываем меню после выбора
-  };
-
-  // Получаем объект настроения по id
   const getMood = (id) => MOODS.find((m) => m.id === id) || MOODS[0];
 
-  const myMoodObj = getMood(myMood);
-  const partnerMoodObj = getMood(partnerMood);
+  // Настроение для левой и правой позиции
+  const leftMoodId = moods[leftUserId] || 'happy';
+  const rightMoodId = moods[rightUserId] || 'happy';
+
+  const leftMoodObj = getMood(leftMoodId);
+  const rightMoodObj = getMood(rightMoodId);
+
+  const handleSelect = (moodId) => {
+    updateMyMood(currentUserId, moodId);
+    setOpenPicker(false);
+  };
 
   return (
     <div className="card mood-card">
       <h3 className="mood-title">Настроение дня</h3>
 
       <div className="mood-row">
-        {/* Моё настроение */}
+        {/* Левая позиция — всегда тот, кто «слева» в паре */}
         <div className="mood-person">
-          <button
-            className="mood-emoji-btn"
-            onClick={() => setOpenPicker(openPicker === 'me' ? null : 'me')}
-          >
-            <span className="mood-emoji">{myMoodObj.emoji}</span>
-          </button>
-          <p className="mood-name">Максим</p>
-          <p className="mood-label">{myMoodObj.label}</p>
+          {isMeLeft ? (
+            <button
+              className="mood-emoji-btn"
+              onClick={() => setOpenPicker(!openPicker)}
+            >
+              <span className="mood-emoji">{leftMoodObj.emoji}</span>
+            </button>
+          ) : (
+            <span className="mood-emoji-static">{leftMoodObj.emoji}</span>
+          )}
+          <p className="mood-name">{leftName}</p>
+          <p className="mood-label">{leftMoodObj.label}</p>
         </div>
 
-        {/* Сердечко между ними */}
         <div className="mood-divider">❤️</div>
 
-        {/* Настроение партнёра */}
+        {/* Правая позиция — всегда партнёр */}
         <div className="mood-person">
-          <button
-            className="mood-emoji-btn"
-            onClick={() => setOpenPicker(openPicker === 'partner' ? null : 'partner')}
-          >
-            <span className="mood-emoji">{partnerMoodObj.emoji}</span>
-          </button>
-          <p className="mood-name">Дарья</p>
-          <p className="mood-label">{partnerMoodObj.label}</p>
+          {!isMeLeft ? (
+            <button
+              className="mood-emoji-btn"
+              onClick={() => setOpenPicker(!openPicker)}
+            >
+              <span className="mood-emoji">{rightMoodObj.emoji}</span>
+            </button>
+          ) : (
+            <span className="mood-emoji-static">{rightMoodObj.emoji}</span>
+          )}
+          <p className="mood-name">{rightName}</p>
+          <p className="mood-label">{rightMoodObj.label}</p>
         </div>
       </div>
 
-      {/* Меню выбора настроения */}
       {openPicker && (
         <div className="mood-picker">
-          <p className="picker-hint">
-            Как ты себя чувствуешь?
-          </p>
+          <p className="picker-hint">Как ты себя чувствуешь?</p>
           <div className="picker-options">
             {MOODS.map((mood) => (
               <button
                 key={mood.id}
                 className="picker-btn"
-                onClick={() => handleSelect(openPicker, mood.id)}
+                onClick={() => handleSelect(mood.id)}
               >
                 <span className="picker-emoji">{mood.emoji}</span>
               </button>
