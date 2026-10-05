@@ -1,0 +1,157 @@
+.calendar-card {
+  padding: 22px 20px 18px;
+  margin-top: 16px;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.cal-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cal-month {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: -0.3px;
+}
+
+.cal-year {
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.cal-nav {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.cal-nav:hover {
+  background: #fff;
+  transform: scale(1.08);
+}
+
+.cal-nav:active {
+  transform: scale(0.94);
+}
+
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 8px;
+}
+
+.cal-weekday {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #aaa;
+  letter-spacing: 1px;
+  padding: 6px 0;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.cal-cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #555;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.cal-cell.empty {
+  visibility: hidden;
+}
+
+.cal-cell:hover:not(.empty) {
+  background: rgba(255, 255, 255, 0.7);
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.cal-cell.today {
+  background: linear-gradient(135deg, #C05A5A, #a83e3e);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 6px 14px rgba(192, 90, 90, 0.35);
+}
+
+.cal-cell.special {
+  position: relative;
+  color: #C05A5A;
+  font-weight: 700;
+}
+
+.cal-cell.special::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #C05A5A;
+}
+
+.cal-cell.today.special {
+  color: #fff;
+}
+
+.cal-cell.today.special::after {
+  background: #fff;
+}
+
+.cal-legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 16px;
+  font-size: 11px;
+  color: #999;
+}
+
+.cal-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-today {
+  background: #C05A5A;
+}
+
+.dot-special {
+  background: #C05A5A;
+  opacity: 0.55;
+}
